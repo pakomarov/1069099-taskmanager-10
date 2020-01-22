@@ -2,10 +2,8 @@
 
 const TASK_COUNT = 3;
 
-
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-
 
 const createSiteMenuTemplate = () => {
   return `<section class="control__btn-wrap">
@@ -452,7 +450,6 @@ const createLoadMoreButtonTemplate = () => {
   return `<button class="load-more" type="button">load more</button>`;
 };
 
-
 const createTemplateElement = (template) => {
   const templateElement = document.createElement(`template`);
   templateElement.innerHTML = template;
@@ -462,7 +459,6 @@ const createTemplateElement = (template) => {
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
-
 
 const renderSiteComponents = () => {
   render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
@@ -488,6 +484,5 @@ const renderSiteComponents = () => {
 
   siteMainElement.appendChild(fragment);
 };
-
 
 renderSiteComponents();
