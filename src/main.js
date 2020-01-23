@@ -1,24 +1,14 @@
+import {createTemplateElement, render} from './utils.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
+import {TASK_COUNT} from './const.js';
 import {createFilterTemplate} from './components/filter.js';
 import {createBoardTemplate} from './components/board.js';
 import {createTaskTemplate} from './components/task.js';
 import {createTaskEditTemplate} from './components/task-edit.js';
 import {createLoadMoreButtonTemplate} from './components/load-more-button.js';
 
-const TASK_COUNT = 3;
-
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-
-const createTemplateElement = (template) => {
-  const templateElement = document.createElement(`template`);
-  templateElement.innerHTML = template;
-  return templateElement;
-};
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const renderSiteComponents = () => {
   render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
