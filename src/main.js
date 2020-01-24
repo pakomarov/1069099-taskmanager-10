@@ -1,5 +1,4 @@
 import {createTemplateElement, render} from './utils.js';
-import {TASK_COUNT} from './const.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
 import {createFilterTemplate} from './components/filter.js';
 import {createBoardTemplate} from './components/board.js';
@@ -7,6 +6,8 @@ import {createSortingTemplate} from './components/sorting.js';
 import {createTaskTemplate} from './components/task.js';
 import {createTaskEditTemplate} from './components/task-edit.js';
 import {createLoadMoreButtonTemplate} from './components/load-more-button.js';
+
+const TASK_COUNT = 3;
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);

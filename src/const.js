@@ -1,3 +1,3 @@
-const TASK_COUNT = 3;
+const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-export {TASK_COUNT};
+export {COLORS};
