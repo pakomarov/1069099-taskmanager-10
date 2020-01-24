@@ -54,6 +54,10 @@ const formatTime = (date) => {
   return `${hours}:${minutes} ${interval}`;
 };
 
+const isDateExpired = (date) => date instanceof Date && date < Date.now();
+
+const isDateToday = (date) => date instanceof Date && date.toDateString() === (new Date()).toDateString();
+
 export {
   createTemplateElement,
   render,
@@ -62,5 +66,7 @@ export {
   flipCoin,
   getRandomDateWithinRange,
   getRandomSubsetOfArray,
-  formatTime
+  formatTime,
+  isDateExpired,
+  isDateToday
 };

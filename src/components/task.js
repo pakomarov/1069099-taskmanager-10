@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from '../const.js';
-import {formatTime} from '../utils.js';
+import {formatTime, isDateExpired} from '../utils.js';
 
 const CONTROL_DISABLE_CLASS = `card__btn--disabled`;
 const TASK_REPEAT_CLASS = `card--repeat`;
@@ -72,12 +72,12 @@ const createTagMarkup = (initialText) => {
 
 const createTagsMarkup = (task) => {
   const {tags: setOfTags} = task;
-  const arrayOfTags = [...setOfTags];
-  const areTagsShowing = !!arrayOfTags.length;
+  const areTagsShowing = !!setOfTags.size;
   if (!areTagsShowing) {
     return ``;
   }
 
+  const arrayOfTags = [...setOfTags];
   return `<div class="card__hashtag">
     <div class="card__hashtag-list">
       ${arrayOfTags
@@ -93,8 +93,7 @@ const createTaskMarkup = (task) => {
   const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
   const repeatClass = hasRepeatingDays ? TASK_REPEAT_CLASS : ``;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const expiredClass = isExpired ? TASK_EXPIRED_CLASS : ``;
+  const expiredClass = isDateExpired(dueDate) ? TASK_EXPIRED_CLASS : ``;
 
   const controlMarkup = createControlMarkup(task);
   const descriptionMarkup = createDescriptionMarkup(task);
@@ -104,24 +103,17 @@ const createTaskMarkup = (task) => {
   return `<article class="card card--${color} ${repeatClass} ${expiredClass}">
     <div class="card__form">
       <div class="card__inner">
-
         ${controlMarkup}
-
         <div class="card__color-bar">
           <svg class="card__color-bar-wave" width="100%" height="10">
             <use xlink:href="#wave"></use>
           </svg>
         </div>
-
         ${descriptionMarkup}
-
         <div class="card__settings">
           <div class="card__details">
-
             ${dueDateMarkup}
-
             ${tagsMarkup}
-
           </div>
         </div>
       </div>

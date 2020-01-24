@@ -10,7 +10,7 @@ import {COLORS} from '../const.js';
 const DESCRIPTION_ITEMS = [
   `Изучить теорию`,
   `Сделать домашку`,
-  `Пройти интенсив на соточку`,
+  `Пройти интенсив на соточку`
 ];
 const DUE_DATE_RANGE = 7;
 const DEFAULT_REPEATING_DAYS = {
@@ -20,7 +20,7 @@ const DEFAULT_REPEATING_DAYS = {
   'th': false,
   'fr': false,
   'sa': false,
-  'su': false,
+  'su': false
 };
 const TAGS_COUNT_MIN = 0;
 const TAGS_COUNT_MAX = 3;
