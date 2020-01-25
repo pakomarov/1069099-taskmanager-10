@@ -5,9 +5,7 @@ const CONTROL_DISABLE_CLASS = `card__btn--disabled`;
 const TASK_REPEAT_CLASS = `card--repeat`;
 const TASK_EXPIRED_CLASS = `card--deadline`;
 
-const createControlMarkup = (task) => {
-  const {isArchive, isFavorite} = task;
-
+const createControlMarkup = ({isArchive, isFavorite}) => {
   const archiveClass = isArchive ? CONTROL_DISABLE_CLASS : ``;
   const favoriteClass = isFavorite ? CONTROL_DISABLE_CLASS : ``;
 
@@ -30,17 +28,13 @@ const createControlMarkup = (task) => {
   </div>`;
 };
 
-const createDescriptionMarkup = (task) => {
-  const {description} = task;
-
+const createDescriptionMarkup = ({description}) => {
   return `<div class="card__textarea-wrap">
     <p class="card__text">${description}</p>
   </div>`;
 };
 
-const createDueDateMarkup = (task) => {
-  const {dueDate} = task;
-
+const createDueDateMarkup = ({dueDate}) => {
   const isDateShowing = !!dueDate;
   if (!isDateShowing) {
     return ``;
@@ -70,8 +64,7 @@ const createTagMarkup = (initialText) => {
   </span>`;
 };
 
-const createTagsMarkup = (task) => {
-  const {tags: setOfTags} = task;
+const createTagsMarkup = ({tags: setOfTags}) => {
   const areTagsShowing = !!setOfTags.size;
   if (!areTagsShowing) {
     return ``;

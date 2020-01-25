@@ -21,4 +21,14 @@ const MONTH_NAMES = [
   `December`,
 ];
 
-export {COLORS, MONTH_NAMES};
+const WEEK_DAY_NAMES = [
+  `mo`,
+  `tu`,
+  `we`,
+  `th`,
+  `fr`,
+  `sa`,
+  `su`
+];
+
+export {COLORS, MONTH_NAMES, WEEK_DAY_NAMES};

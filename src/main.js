@@ -4,7 +4,7 @@ import {createFiltersMarkup} from './components/filter.js';
 import {createBoardTemplate} from './components/board.js';
 import {createSortingTemplate} from './components/sorting.js';
 import {createTaskMarkup} from './components/task.js';
-import {createTaskEditTemplate} from './components/task-edit.js';
+import {createTaskEditMarkup} from './components/task-edit.js';
 import {createLoadMoreButtonTemplate} from './components/load-more-button.js';
 import {generateTasks} from './mocks/task.js';
 import {generateFilters} from './mocks/filter.js';
@@ -32,12 +32,8 @@ const renderSiteComponents = () => {
   render(boardElement, createSortingTemplate(), `afterbegin`);
 
   const taskListElement = boardElement.querySelector(`.board__tasks`);
-  render(taskListElement, createTaskEditTemplate(), `beforeend`);
-
-  for (const task of tasks) {
-    const taskMarkup = createTaskMarkup(task);
-    render(taskListElement, taskMarkup, `beforeend`);
-  }
+  render(taskListElement, createTaskEditMarkup(tasks[0]), `beforeend`);
+  tasks.slice(1).forEach((task) => render(taskListElement, createTaskMarkup(task), `beforeend`));
 
   render(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
 
