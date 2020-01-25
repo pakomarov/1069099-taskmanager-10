@@ -1,13 +1,15 @@
 import {MONTH_NAMES} from '../const.js';
-import {formatTime, isDateExpired} from '../utils.js';
+import {formatTime, isDateExpired, joinMapped} from '../utils.js';
 
-const CONTROL_DISABLE_CLASS = `card__btn--disabled`;
-const TASK_REPEAT_CLASS = `card--repeat`;
-const TASK_EXPIRED_CLASS = `card--deadline`;
+const ClassCard = {
+  DISABLE: `card__btn--disabled`,
+  REPEAT: `card--repeat`,
+  EXPIRED: `card--deadline`
+};
 
 const createControlMarkup = ({isArchive, isFavorite}) => {
-  const archiveClass = isArchive ? CONTROL_DISABLE_CLASS : ``;
-  const favoriteClass = isFavorite ? CONTROL_DISABLE_CLASS : ``;
+  const archiveClass = isArchive ? ClassCard.DISABLE : ``;
+  const favoriteClass = isFavorite ? ClassCard.DISABLE : ``;
 
   return `<div class="card__control">
     <button type="button" class="card__btn card__btn--edit">
@@ -35,8 +37,7 @@ const createDescriptionMarkup = ({description}) => {
 };
 
 const createDueDateMarkup = ({dueDate}) => {
-  const isDateShowing = !!dueDate;
-  if (!isDateShowing) {
+  if (!dueDate) {
     return ``;
   }
 
@@ -70,12 +71,11 @@ const createTagsMarkup = ({tags: setOfTags}) => {
     return ``;
   }
 
-  const arrayOfTags = [...setOfTags];
+  const tags = [...setOfTags];
+  const tagListMarkup = joinMapped(tags, createTagMarkup, `\n`);
   return `<div class="card__hashtag">
     <div class="card__hashtag-list">
-      ${arrayOfTags
-        .map(createTagMarkup)
-        .join(`\n`)}
+      ${tagListMarkup}
     </div>
   </div>`;
 };
@@ -84,9 +84,9 @@ const createTaskMarkup = (task) => {
   const {color, repeatingDays, dueDate} = task;
 
   const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
-  const repeatClass = hasRepeatingDays ? TASK_REPEAT_CLASS : ``;
+  const repeatClass = hasRepeatingDays ? ClassCard.REPEAT : ``;
 
-  const expiredClass = isDateExpired(dueDate) ? TASK_EXPIRED_CLASS : ``;
+  const expiredClass = isDateExpired(dueDate) ? ClassCard.EXPIRED : ``;
 
   const controlMarkup = createControlMarkup(task);
   const descriptionMarkup = createDescriptionMarkup(task);

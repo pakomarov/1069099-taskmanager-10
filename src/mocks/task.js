@@ -1,5 +1,5 @@
 import {
-  getRandomIntegerInRange,
+  getRandomBetween,
   getRandomArrayEntry,
   flipCoin,
   getRandomDateWithinRange,
@@ -47,7 +47,7 @@ const generateRepeatingDays = () => ({
 });
 
 const generateTags = () => {
-  let numberOfTags = getRandomIntegerInRange(TAGS_COUNT_MIN, TAGS_COUNT_MAX);
+  let numberOfTags = getRandomBetween(TAGS_COUNT_MIN, TAGS_COUNT_MAX);
   numberOfTags = numberOfTags > TAGS.length ? TAGS.length : numberOfTags;
   const randomSubsetOfArray = getRandomSubsetOfArray(TAGS, numberOfTags);
   return new Set(randomSubsetOfArray);
