@@ -1,46 +1,58 @@
+import {createTemplateElement, render} from './utils.js';
 import {createSiteMenuTemplate} from './components/site-menu.js';
-import {createFilterTemplate} from './components/filter.js';
+import {createFiltersMarkup} from './components/filter.js';
 import {createBoardTemplate} from './components/board.js';
-import {createTaskTemplate} from './components/task.js';
-import {createTaskEditTemplate} from './components/task-edit.js';
+import {createSortingTemplate} from './components/sorting.js';
+import {createTaskMarkup} from './components/task.js';
+import {createTaskEditMarkup} from './components/task-edit.js';
 import {createLoadMoreButtonTemplate} from './components/load-more-button.js';
+import {generateTasks} from './mocks/task.js';
+import {generateFilters} from './mocks/filter.js';
 
-const TASK_COUNT = 3;
+const TASK_COUNT = 50;
+const SHOWING_TASKS_COUNT_ON_START = 8;
+const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const createTemplateElement = (template) => {
-  const templateElement = document.createElement(`template`);
-  templateElement.innerHTML = template;
-  return templateElement;
-};
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+const tasks = generateTasks(TASK_COUNT);
+const filters = generateFilters(tasks);
 
 const renderSiteComponents = () => {
   render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
 
   const fragment = document.createDocumentFragment();
 
-  const filterTemplateElement = createTemplateElement(createFilterTemplate());
+  const filterTemplateElement = createTemplateElement(createFiltersMarkup(filters));
   fragment.appendChild(filterTemplateElement.content);
 
   const boardTemplateElement = createTemplateElement(createBoardTemplate());
   fragment.appendChild(boardTemplateElement.content);
 
-  const taskListElement = fragment.querySelector(`.board__tasks`);
-  render(taskListElement, createTaskEditTemplate(), `beforeend`);
-
-  for (let i = 0; i < TASK_COUNT; i++) {
-    render(taskListElement, createTaskTemplate(), `beforeend`);
-  }
-
   const boardElement = fragment.querySelector(`.board`);
+  render(boardElement, createSortingTemplate(), `afterbegin`);
+
+  const taskListElement = boardElement.querySelector(`.board__tasks`);
+  render(taskListElement, createTaskEditMarkup(tasks[0]), `beforeend`);
+  let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+  tasks.slice(1, showingTasksCount).forEach((task) => render(taskListElement, createTaskMarkup(task), `beforeend`));
+
 
   render(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
+
+  const loadMoreButton = boardElement.querySelector(`.load-more`);
+  loadMoreButton.addEventListener(`click`, () => {
+    const prevTasksCount = showingTasksCount;
+    showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+
+    tasks.slice(prevTasksCount, showingTasksCount)
+      .forEach((task) => render(taskListElement, createTaskMarkup(task), `beforeend`));
+
+    if (showingTasksCount >= tasks.length) {
+      loadMoreButton.remove();
+    }
+  });
 
   siteMainElement.appendChild(fragment);
 };
