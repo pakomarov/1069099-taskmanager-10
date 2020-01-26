@@ -1,3 +1,5 @@
+import {REGEXP_SPACES} from './const.js';
+
 const createTemplateElement = (template) => {
   const templateElement = document.createElement(`template`);
   templateElement.innerHTML = template;
@@ -59,6 +61,8 @@ const joinMapped = (data, createMarkup, delimiter = ``) => data
   .map(createMarkup)
   .join(delimiter);
 
+const removeSpaces = (text) => text.replace(REGEXP_SPACES, ``);
+
 export {
   createTemplateElement,
   render,
@@ -70,5 +74,6 @@ export {
   formatTime,
   isDateExpired,
   isDateToday,
-  joinMapped
+  joinMapped,
+  removeSpaces
 };

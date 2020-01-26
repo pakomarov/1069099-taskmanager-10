@@ -1,3 +1,5 @@
+import {joinMapped} from '../utils.js';
+
 const createFilterMarkup = ({title, count}) => {
   return `<input
       type="radio"
@@ -11,12 +13,15 @@ const createFilterMarkup = ({title, count}) => {
   >`;
 };
 
-const createFiltersMarkup = (filters) => {
+const setupFiltersTemplate = (filterListMarkup) => {
   return `<section class="main__filter filter container">
-    ${filters
-      .map(createFilterMarkup)
-      .join(`\n`)}
+    ${filterListMarkup}
   </section>`;
+};
+
+const createFiltersMarkup = (filters) => {
+  const filterListMarkup = joinMapped(filters, createFilterMarkup, `\n`);
+  return setupFiltersTemplate(filterListMarkup);
 };
 
 export {createFiltersMarkup};
