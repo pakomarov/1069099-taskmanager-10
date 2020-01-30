@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from '../const.js';
-import {formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils.js';
+import {createElement, formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils.js';
 
 const ClassCard = {
   DISABLE: `card__btn--disabled`,
@@ -104,7 +104,7 @@ const setupTaskTemplate = (Settings, EmbeddedMarkup) => {
   </article>`;
 };
 
-const createTaskMarkup = (task) => {
+const createTaskTemplate = (task) => {
   const {
     color,
     repeatingDays,
@@ -129,4 +129,25 @@ const createTaskMarkup = (task) => {
   return setupTaskTemplate(TemplateSettings, EmbeddedMarkup);
 };
 
-export {createTaskMarkup};
+export default class Task {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
