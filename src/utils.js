@@ -1,13 +1,26 @@
 import {REGEXP_SPACES} from './const.js';
 
-const createTemplateElement = (template) => {
-  const templateElement = document.createElement(`template`);
-  templateElement.innerHTML = template;
-  return templateElement;
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
 };
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
 };
 
 // Добавление единицы необходимо, чтобы включить максимальное значение. Math.random() считает от 0 включительно до 1, не включая единицу
@@ -64,7 +77,8 @@ const joinMapped = (data, createMarkup, delimiter = ``) => data
 const removeSpaces = (text) => text.replace(REGEXP_SPACES, ``);
 
 export {
-  createTemplateElement,
+  RenderPosition,
+  createElement,
   render,
   getRandomBetween,
   getRandomArrayEntry,
