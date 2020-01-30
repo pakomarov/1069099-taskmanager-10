@@ -22,7 +22,7 @@ const setupFilterTemplate = (filterListMarkup) => {
 const createFilterTemplate = (filters) => {
   const filterListMarkup = filters.map((it, i) => {
     const checkedAttribute = i === 0 ? `checked` : ``;
-    createFilterMarkup(it, checkedAttribute);
+    return createFilterMarkup(it, checkedAttribute);
   })
   .join(`\n`);
   return setupFilterTemplate(filterListMarkup);
