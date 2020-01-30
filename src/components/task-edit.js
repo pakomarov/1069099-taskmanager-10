@@ -1,5 +1,5 @@
 import {COLORS, MONTH_NAMES, WEEK_DAY_NAMES, ATTRIBUTE_CHECKED} from '../const.js';
-import {formatTime, isDateExpired, joinMapped} from '../utils.js';
+import {createElement, formatTime, isDateExpired, joinMapped} from '../utils.js';
 
 const ClassCard = {
   REPEAT: `card--repeat`,
@@ -50,7 +50,6 @@ const setupRepeatingDayTemplate = (weekDayName, checkedAttribute) => {
 
 const createRepeatingDayMarkup = (weekDayName, isChecked) => {
   const checkedAttribute = isChecked ? ATTRIBUTE_CHECKED : ``;
-
   return setupRepeatingDayTemplate(weekDayName, checkedAttribute);
 };
 
@@ -96,7 +95,6 @@ const setupTagTemplate = (tagValue, tagText) => {
 const createTagMarkup = (initialText) => {
   // Убирает пробелы (https://stackoverflow.com/questions/5963182/how-to-remove-spaces-from-a-string-using-javascript)
   const editedText = initialText.replace(/\s+/g, ``);
-
   return setupTagTemplate(initialText, editedText);
 };
 
@@ -109,7 +107,6 @@ const setupTagsTemplate = (tagListMarkup) => {
 const createTagsMarkup = ({tags: setOfTags}) => {
   const tags = [...setOfTags];
   const tagListMarkup = joinMapped(tags, createTagMarkup, `\n`);
-
   return setupTagsTemplate(tagListMarkup);
 };
 
@@ -131,7 +128,6 @@ const setupColorTemplate = (color, checkedAttribute) => {
 
 const createColorMarkup = (color, isChecked) => {
   const checkedAttribute = isChecked ? ATTRIBUTE_CHECKED : ``;
-
   return setupColorTemplate(color, checkedAttribute);
 };
 
@@ -216,7 +212,7 @@ const setupTaskEditTemplate = (Settings, EmbeddedMarkup) => {
   </article>`;
 };
 
-const createTaskEditMarkup = (task) => {
+const createTaskEditTemplate = (task) => {
   const {
     color,
     repeatingDays,
@@ -244,4 +240,25 @@ const createTaskEditMarkup = (task) => {
   return setupTaskEditTemplate(TemplateSettings, EmbeddedMarkup);
 };
 
-export {createTaskEditMarkup};
+export default class TaskEdit {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
