@@ -7,7 +7,7 @@ import {createTaskMarkup} from './components/task.js';
 import {createTaskEditMarkup} from './components/task-edit.js';
 import {createLoadMoreButtonTemplate} from './components/load-more-button.js';
 import {generateTasks} from './mocks/task.js';
-import {generateFilters} from './mocks/filter.js';
+import {getFilters} from './mocks/filter.js';
 
 const TASK_COUNT = 50;
 const SHOWING_TASKS_COUNT_ON_START = 8;
@@ -17,7 +17,7 @@ const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 const tasks = generateTasks(TASK_COUNT);
-const filters = generateFilters(tasks);
+const filters = getFilters(tasks);
 
 const renderSiteComponents = () => {
   render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);

@@ -55,7 +55,7 @@ const getFilterCount = (tasks, filterTitle) => {
   return count;
 };
 
-const generateFilters = (tasks) => {
+const getFilters = (tasks) => {
   return FILTER_TITLES.map((filterTitle) => {
     return {
       title: filterTitle,
@@ -64,4 +64,4 @@ const generateFilters = (tasks) => {
   });
 };
 
-export {generateFilters};
+export {getFilters};

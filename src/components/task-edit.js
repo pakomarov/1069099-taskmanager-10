@@ -181,17 +181,17 @@ const setupTaskEditTemplate = (Settings, EmbeddedMarkup) => {
                 date: <span class="card__date-status">${Settings.dueDateFlag}</span>
               </button>
 
-              ${EmbeddedMarkup.dueDateMarkup}
+              ${EmbeddedMarkup.dueDate}
 
               <button class="card__repeat-toggle" type="button">
                 repeat:<span class="card__repeat-status">${Settings.repeatingDaysFlag}</span>
               </button>
 
-              ${EmbeddedMarkup.repeatingDaysMarkup}
+              ${EmbeddedMarkup.repeatingDays}
             </div>
 
             <div class="card__hashtag">
-              ${EmbeddedMarkup.tagsMarkup}
+              ${EmbeddedMarkup.tags}
 
               <label>
                 <input
@@ -204,7 +204,7 @@ const setupTaskEditTemplate = (Settings, EmbeddedMarkup) => {
             </div>
           </div>
 
-          ${EmbeddedMarkup.colorsMarkup}
+          ${EmbeddedMarkup.colors}
         </div>
 
         <div class="card__status-btns">
@@ -236,10 +236,10 @@ const createTaskEditMarkup = (task) => {
   const hasDueDate = !!dueDate;
   TemplateSettings.dueDateFlag = hasDueDate ? `yes` : `no`;
 
-  EmbeddedMarkup.dueDateMarkup = createDueDateMarkup(task);
-  EmbeddedMarkup.repeatingDaysMarkup = createRepeatingDaysMarkup(task);
-  EmbeddedMarkup.tagsMarkup = createTagsMarkup(task);
-  EmbeddedMarkup.colorsMarkup = createColorsMarkup(task);
+  EmbeddedMarkup.dueDate = createDueDateMarkup(task);
+  EmbeddedMarkup.repeatingDays = createRepeatingDaysMarkup(task);
+  EmbeddedMarkup.tags = createTagsMarkup(task);
+  EmbeddedMarkup.colors = createColorsMarkup(task);
 
   return setupTaskEditTemplate(TemplateSettings, EmbeddedMarkup);
 };

@@ -95,8 +95,8 @@ const setupTaskTemplate = (Settings, EmbeddedMarkup) => {
         </div>
         <div class="card__settings">
           <div class="card__details">
-            ${EmbeddedMarkup.dueDateMarkup}
-            ${EmbeddedMarkup.tagsMarkup}
+            ${EmbeddedMarkup.dueDate}
+            ${EmbeddedMarkup.tags}
           </div>
         </div>
       </div>
@@ -123,8 +123,8 @@ const createTaskMarkup = (task) => {
   TemplateSettings.archiveClass = isArchive ? ClassCard.DISABLE : ``;
   TemplateSettings.favoriteClass = isFavorite ? ClassCard.DISABLE : ``;
 
-  EmbeddedMarkup.dueDateMarkup = createDueDateMarkup(task);
-  EmbeddedMarkup.tagsMarkup = createTagsMarkup(task);
+  EmbeddedMarkup.dueDate = createDueDateMarkup(task);
+  EmbeddedMarkup.tags = createTagsMarkup(task);
 
   return setupTaskTemplate(TemplateSettings, EmbeddedMarkup);
 };
