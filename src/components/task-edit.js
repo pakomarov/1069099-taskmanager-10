@@ -1,33 +1,12 @@
-import {COLORS, MONTH_NAMES, WEEK_DAY_NAMES} from '../const.js';
-import {formatTime, isDateExpired, joinMapped} from '../utils.js';
+import {COLORS, MONTH_NAMES, WEEK_DAY_NAMES, ATTRIBUTE_CHECKED} from '../const.js';
+import {createElement, formatTime, isDateExpired, joinMapped} from '../utils.js';
 
 const ClassCard = {
   REPEAT: `card--repeat`,
   EXPIRED: `card--deadline`
 };
 
-const createDescriptionMarkup = ({description}) => {
-  return `<div class="card__textarea-wrap">
-    <label>
-      <textarea
-        class="card__text"
-        placeholder="Start typing your text here..."
-        name="text"
-      >${description}</textarea>
-    </label>
-  </div>`;
-};
-
-const createDueDateMarkup = ({dueDate, repeatingDays}) => {
-  const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
-  if (hasRepeatingDays) {
-    return ``;
-  }
-
-  const hasDueDate = !!dueDate;
-  const date = `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}`;
-  const time = formatTime(dueDate);
-  const dueDateValue = hasDueDate ? `${date} ${time}` : ``;
+const setupDueDateTemplate = (dueDateValue) => {
   return `<fieldset class="card__date-deadline">
     <label class="card__input-deadline-wrap">
       <input
@@ -41,8 +20,21 @@ const createDueDateMarkup = ({dueDate, repeatingDays}) => {
   </fieldset>`;
 };
 
-const createRepeatingDayMarkup = (weekDayName, isChecked) => {
-  const checkedAttribute = isChecked ? `checked` : ``;
+const createDueDateMarkup = ({dueDate, repeatingDays}) => {
+  const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
+  if (hasRepeatingDays) {
+    return ``;
+  }
+
+  const hasDueDate = !!dueDate;
+  const date = `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}`;
+  const time = formatTime(dueDate);
+  const dueDateValue = hasDueDate ? `${date} ${time}` : ``;
+
+  return setupDueDateTemplate(dueDateValue);
+};
+
+const setupRepeatingDayTemplate = (weekDayName, checkedAttribute) => {
   return `<input
     class="visually-hidden card__repeat-day-input"
     type="checkbox"
@@ -56,6 +48,19 @@ const createRepeatingDayMarkup = (weekDayName, isChecked) => {
   >`;
 };
 
+const createRepeatingDayMarkup = (weekDayName, isChecked) => {
+  const checkedAttribute = isChecked ? ATTRIBUTE_CHECKED : ``;
+  return setupRepeatingDayTemplate(weekDayName, checkedAttribute);
+};
+
+const setupRepeatingDaysTemplate = (repeatingDayListMarkup) => {
+  return `<fieldset class="card__repeat-days">
+    <div class="card__repeat-days-inner">
+      ${repeatingDayListMarkup}
+    </div>
+  </fieldset>`;
+};
+
 const createRepeatingDaysMarkup = ({dueDate, repeatingDays}) => {
   if (!dueDate) {
     return ``;
@@ -66,26 +71,20 @@ const createRepeatingDaysMarkup = ({dueDate, repeatingDays}) => {
     return createRepeatingDayMarkup(weekDayName, isChecked);
   })
   .join(`\n`);
-  return `<fieldset class="card__repeat-days">
-    <div class="card__repeat-days-inner">
-      ${repeatingDayListMarkup}
-    </div>
-  </fieldset>`;
+
+  return setupRepeatingDaysTemplate(repeatingDayListMarkup);
 };
 
-const createTagMarkup = (initialText) => {
-  // Убирает пробелы (https://stackoverflow.com/questions/5963182/how-to-remove-spaces-from-a-string-using-javascript)
-  const editedText = initialText.replace(/\s+/g, ``);
-
+const setupTagTemplate = (tagValue, tagText) => {
   return `<span class="card__hashtag-inner">
     <input
       type="hidden"
       name="hashtag"
-      value="${initialText}"
+      value="${tagValue}"
       class="card__hashtag-hidden-input"
     />
     <p class="card__hashtag-name">
-      #${editedText}
+      #${tagText}
     </p>
     <button type="button" class="card__hashtag-delete">
       delete
@@ -93,16 +92,25 @@ const createTagMarkup = (initialText) => {
   </span>`;
 };
 
-const createTagsMarkup = ({tags: setOfTags}) => {
-  const tags = [...setOfTags];
-  const tagListMarkup = joinMapped(tags, createTagMarkup, `\n`);
+const createTagMarkup = (initialText) => {
+  // Убирает пробелы (https://stackoverflow.com/questions/5963182/how-to-remove-spaces-from-a-string-using-javascript)
+  const editedText = initialText.replace(/\s+/g, ``);
+  return setupTagTemplate(initialText, editedText);
+};
+
+const setupTagsTemplate = (tagListMarkup) => {
   return `<div class="card__hashtag-list">
     ${tagListMarkup}
   </div>`;
 };
 
-const createColorMarkup = (color, isChecked) => {
-  const checkedAttribute = isChecked ? `checked` : ``;
+const createTagsMarkup = ({tags: setOfTags}) => {
+  const tags = [...setOfTags];
+  const tagListMarkup = joinMapped(tags, createTagMarkup, `\n`);
+  return setupTagsTemplate(tagListMarkup);
+};
+
+const setupColorTemplate = (color, checkedAttribute) => {
   return `<input
     type="radio"
     id="color-${color}-4"
@@ -118,12 +126,12 @@ const createColorMarkup = (color, isChecked) => {
   >`;
 };
 
-const createColorsMarkup = ({color: currentColor}) => {
-  const colorListMarkup = COLORS.map((color) => {
-    const isChecked = color === currentColor;
-    return createColorMarkup(color, isChecked);
-  })
-  .join(`\n`);
+const createColorMarkup = (color, isChecked) => {
+  const checkedAttribute = isChecked ? ATTRIBUTE_CHECKED : ``;
+  return setupColorTemplate(color, checkedAttribute);
+};
+
+const setupColorsTemplate = (colorListMarkup) => {
   return `<div class="card__colors-inner">
     <h3 class="card__colors-title">Color</h3>
     <div class="card__colors-wrap">
@@ -132,25 +140,18 @@ const createColorsMarkup = ({color: currentColor}) => {
   </div>`;
 };
 
-const createTaskEditMarkup = (task) => {
-  const {color, dueDate, repeatingDays} = task;
+const createColorsMarkup = ({color: currentColor}) => {
+  const colorListMarkup = COLORS.map((color) => {
+    const isChecked = color === currentColor;
+    return createColorMarkup(color, isChecked);
+  })
+  .join(`\n`);
 
-  const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
-  const repeatClass = hasRepeatingDays ? ClassCard.REPEAT : ``;
-  const repeatingDaysFlag = hasRepeatingDays ? `yes` : `no`;
+  return setupColorsTemplate(colorListMarkup);
+};
 
-  const expiredClass = isDateExpired(dueDate) ? ClassCard.EXPIRED : ``;
-
-  const hasDueDate = !!dueDate;
-  const dueDateFlag = hasDueDate ? `yes` : `no`;
-
-  const descriptionMarkup = createDescriptionMarkup(task);
-  const dueDateMarkup = createDueDateMarkup(task);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(task);
-  const tagsMarkup = createTagsMarkup(task);
-  const colorsMarkup = createColorsMarkup(task);
-
-  return `<article class="card card--edit card--${color} ${repeatClass} ${expiredClass}">
+const setupTaskEditTemplate = (Settings, EmbeddedMarkup) => {
+  return `<article class="card card--edit card--${Settings.color} ${Settings.repeatClass} ${Settings.expiredClass}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">
@@ -159,26 +160,34 @@ const createTaskEditMarkup = (task) => {
           </svg>
         </div>
 
-        ${descriptionMarkup}
+        <div class="card__textarea-wrap">
+          <label>
+            <textarea
+              class="card__text"
+              placeholder="Start typing your text here..."
+              name="text"
+            >${Settings.description}</textarea>
+          </label>
+        </div>
 
         <div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">${dueDateFlag}</span>
+                date: <span class="card__date-status">${Settings.dueDateFlag}</span>
               </button>
 
-              ${dueDateMarkup}
+              ${EmbeddedMarkup.dueDate}
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${repeatingDaysFlag}</span>
+                repeat:<span class="card__repeat-status">${Settings.repeatingDaysFlag}</span>
               </button>
 
-              ${repeatingDaysMarkup}
+              ${EmbeddedMarkup.repeatingDays}
             </div>
 
             <div class="card__hashtag">
-              ${tagsMarkup}
+              ${EmbeddedMarkup.tags}
 
               <label>
                 <input
@@ -191,7 +200,7 @@ const createTaskEditMarkup = (task) => {
             </div>
           </div>
 
-          ${colorsMarkup}
+          ${EmbeddedMarkup.colors}
         </div>
 
         <div class="card__status-btns">
@@ -203,4 +212,53 @@ const createTaskEditMarkup = (task) => {
   </article>`;
 };
 
-export {createTaskEditMarkup};
+const createTaskEditTemplate = (task) => {
+  const {
+    color,
+    repeatingDays,
+    dueDate,
+    description
+  } = task;
+
+  const TemplateSettings = {color, description};
+  const EmbeddedMarkup = {};
+
+  const hasRepeatingDays = Object.values(repeatingDays).some(Boolean);
+  TemplateSettings.repeatClass = hasRepeatingDays ? ClassCard.REPEAT : ``;
+  TemplateSettings.repeatingDaysFlag = hasRepeatingDays ? `yes` : `no`;
+
+  TemplateSettings.expiredClass = isDateExpired(dueDate) ? ClassCard.EXPIRED : ``;
+
+  const hasDueDate = !!dueDate;
+  TemplateSettings.dueDateFlag = hasDueDate ? `yes` : `no`;
+
+  EmbeddedMarkup.dueDate = createDueDateMarkup(task);
+  EmbeddedMarkup.repeatingDays = createRepeatingDaysMarkup(task);
+  EmbeddedMarkup.tags = createTagsMarkup(task);
+  EmbeddedMarkup.colors = createColorsMarkup(task);
+
+  return setupTaskEditTemplate(TemplateSettings, EmbeddedMarkup);
+};
+
+export default class TaskEdit {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

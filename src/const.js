@@ -1,3 +1,5 @@
+const REGEXP_SPACES = `/\s+/g`;
+
 const COLORS = [
   `black`,
   `yellow`,
@@ -31,4 +33,12 @@ const WEEK_DAY_NAMES = [
   `su`
 ];
 
-export {COLORS, MONTH_NAMES, WEEK_DAY_NAMES};
+const ATTRIBUTE_CHECKED = `checked`;
+
+export {
+  REGEXP_SPACES,
+  COLORS,
+  MONTH_NAMES,
+  WEEK_DAY_NAMES,
+  ATTRIBUTE_CHECKED
+};

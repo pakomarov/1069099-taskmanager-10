@@ -74,9 +74,11 @@ const generateTask = () => {
 };
 
 const generateTasks = (count) => {
-  return new Array(count)
-    .fill(``)
-    .map(generateTask);
+  const tasks = [];
+  for (let i = 0; i < count; i++) {
+    tasks.push(generateTask());
+  }
+  return tasks;
 };
 
 export {generateTasks};
