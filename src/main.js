@@ -1,3 +1,4 @@
+//bruh
 import {generateTasks} from './mocks/task.js';
 import {getFilters} from './mocks/filter.js';
 import {RenderPosition, render} from './utils/render.js';
