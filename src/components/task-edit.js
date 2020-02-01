@@ -1,5 +1,6 @@
 import {COLORS, MONTH_NAMES, WEEK_DAY_NAMES, ATTRIBUTE_CHECKED} from '../const.js';
-import {createElement, formatTime, isDateExpired, joinMapped} from '../utils.js';
+import {formatTime, isDateExpired, joinMapped} from '../utils/common.js';
+import AbstractComponent from './abstract-component.js';
 
 const ClassCard = {
   REPEAT: `card--repeat`,
@@ -240,25 +241,19 @@ const createTaskEditTemplate = (task) => {
   return setupTaskEditTemplate(TemplateSettings, EmbeddedMarkup);
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
+    super();
+
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
   }
 }
