@@ -1,6 +1,6 @@
 import {RenderPosition, render, remove, replace} from '../utils/render.js';
 import NoTasksComponent from '../components/no-tasks.js';
-import SortComponent from '../components/sort.js';
+import SortComponent, {SortType} from '../components/sort.js';
 import TasksComponent from '../components/tasks.js';
 import TaskComponent from '../components/task.js';
 import TaskEditComponent from '../components/task-edit.js';
@@ -49,19 +49,15 @@ export default class BoardController {
     render(this._tasksComponent.getElement(), taskComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderTasks(tasks) {
+    tasks.forEach((task) => this._renderTask(task));
+  }
+
   render(tasks) {
-    const isAllTasksArchived = tasks.every((task) => task.isArchive);
-    const containerElement = this._boardComponent.getElement();
-
-    if (isAllTasksArchived) {
-      render(containerElement, this._noTasksComponent, RenderPosition.BEFOREEND);
-    } else {
-      render(containerElement, this._sortComponent, RenderPosition.BEFOREEND);
-      render(containerElement, this._tasksComponent, RenderPosition.BEFOREEND);
-
-      let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-      tasks.slice(0, showingTasksCount)
-        .forEach((task) => this._renderTask(task));
+    const renderLoadMoreButton = () => {
+      if (showingTasksCount >= tasks.length) {
+        return;
+      }
 
       render(containerElement, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
@@ -76,6 +72,48 @@ export default class BoardController {
           remove(this._loadMoreButtonComponent);
         }
       });
+    };
+
+    const containerElement = this._boardComponent.getElement();
+
+    const areAllTasksArchived = tasks.every((task) => task.isArchive);
+    if (areAllTasksArchived) {
+      render(containerElement, this._noTasksComponent, RenderPosition.BEFOREEND);
+      return;
     }
+
+    render(containerElement, this._sortComponent, RenderPosition.BEFOREEND);
+    render(containerElement, this._tasksComponent, RenderPosition.BEFOREEND);
+
+    let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+    this._renderTasks(tasks.slice(0, showingTasksCount));
+    renderLoadMoreButton();
+
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      let sortedTasks = [];
+
+      switch (sortType) {
+        case SortType.DATE_UP:
+          sortedTasks = tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+          break;
+        case SortType.DATE_DOWN:
+          sortedTasks = tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
+          break;
+        case SortType.DEFAULT:
+          sortedTasks = tasks.slice(0, showingTasksCount);
+          break;
+      }
+
+      this._tasksComponent.getElement().innerHTML = ``;
+
+      this._renderTasks(sortedTasks);
+
+      if (sortType === SortType.DEFAULT) {
+        renderLoadMoreButton();
+      } else {
+        remove(this._loadMoreButtonComponent);
+      }
+    });
   }
 }
+
