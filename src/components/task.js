@@ -1,5 +1,6 @@
 import {MONTH_NAMES} from '../const.js';
-import {createElement, formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils.js';
+import {formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 const ClassCard = {
   DISABLE: `card__btn--disabled`,
@@ -129,25 +130,14 @@ const createTaskTemplate = (task) => {
   return setupTaskTemplate(TemplateSettings, EmbeddedMarkup);
 };
 
-export default class Task {
+export default class Task extends AbstractComponent {
   constructor(task) {
+    super();
+
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
