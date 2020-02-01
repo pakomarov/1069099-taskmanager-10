@@ -4,7 +4,7 @@ import {
   flipCoin,
   getRandomDateWithinRange,
   getRandomSubsetOfArray
-} from '../utils.js';
+} from '../utils/common.js';
 import {COLORS} from '../const.js';
 
 const DESCRIPTION_ITEMS = [

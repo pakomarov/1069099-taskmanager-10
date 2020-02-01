@@ -1,27 +1,4 @@
-import {REGEXP_SPACES} from './const.js';
-
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
+import {REGEXP_SPACES} from '../const.js';
 
 // Добавление единицы необходимо, чтобы включить максимальное значение. Math.random() считает от 0 включительно до 1, не включая единицу
 const getRandomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -77,9 +54,6 @@ const joinMapped = (data, createMarkup, delimiter = ``) => data
 const removeSpaces = (text) => text.replace(REGEXP_SPACES, ``);
 
 export {
-  RenderPosition,
-  createElement,
-  render,
   getRandomBetween,
   getRandomArrayEntry,
   flipCoin,

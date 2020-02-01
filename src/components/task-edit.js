@@ -1,5 +1,5 @@
 import {COLORS, MONTH_NAMES, WEEK_DAY_NAMES, ATTRIBUTE_CHECKED} from '../const.js';
-import {formatTime, isDateExpired, joinMapped} from '../utils.js';
+import {formatTime, isDateExpired, joinMapped} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
 const ClassCard = {

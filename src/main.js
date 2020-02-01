@@ -1,6 +1,6 @@
 import {generateTasks} from './mocks/task.js';
 import {getFilters} from './mocks/filter.js';
-import {render, RenderPosition} from './utils.js';
+import {RenderPosition, render, remove, replace} from './utils/render.js';
 import SiteMenuComponent from './components/site-menu.js';
 import FilterComponent from './components/filter.js';
 import BoardComponent from './components/board.js';
@@ -32,11 +32,11 @@ const renderTask = (containerElement, task) => {
   };
 
   const replaceEditToTask = () => {
-    containerElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    replace(taskComponent, taskEditComponent);
   };
 
   const replaceTaskToEdit = () => {
-    containerElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+    replace(taskEditComponent, taskComponent);
   };
 
   const taskComponent = new TaskComponent(task);
@@ -51,19 +51,20 @@ const renderTask = (containerElement, task) => {
   const editForm = taskEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, replaceEditToTask);
 
-  render(containerElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  render(containerElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardComponent, tasks) => {
   const isAllTasksArchived = tasks.every((task) => task.isArchive);
+  const boardElement = boardComponent.getElement();
 
   if (isAllTasksArchived) {
-    render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
+    render(boardElement, new NoTasksComponent(), RenderPosition.BEFOREEND);
   } else {
-    render(boardComponent.getElement(), new SortComponent().getElement(), RenderPosition.BEFOREEND);
+    render(boardElement, new SortComponent(), RenderPosition.BEFOREEND);
 
     const tasksComponent = new TasksComponent();
-    render(boardComponent.getElement(), tasksComponent.getElement(), RenderPosition.BEFOREEND);
+    render(boardElement, tasksComponent, RenderPosition.BEFOREEND);
 
     let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
     tasks.slice(0, showingTasksCount)
@@ -72,7 +73,7 @@ const renderBoard = (boardComponent, tasks) => {
       });
 
     const loadMoreButtonComponent = new LoadMoreButtonComponent();
-    render(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    render(boardElement, loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
     loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
       const prevTasksCount = showingTasksCount;
@@ -84,24 +85,23 @@ const renderBoard = (boardComponent, tasks) => {
         });
 
       if (showingTasksCount >= tasks.length) {
-        loadMoreButtonComponent.getElement().remove();
-        loadMoreButtonComponent.removeElement();
+        remove(loadMoreButtonComponent);
       }
     });
   }
 };
 
 const renderSiteComponents = () => {
-  render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteHeaderElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
   const fragment = document.createDocumentFragment();
 
-  render(fragment, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+  render(fragment, new FilterComponent(filters), RenderPosition.BEFOREEND);
 
   const boardComponent = new BoardComponent();
   renderBoard(boardComponent, tasks);
 
-  render(fragment, boardComponent.getElement(), RenderPosition.BEFOREEND);
+  render(fragment, boardComponent, RenderPosition.BEFOREEND);
 
   siteMainElement.appendChild(fragment);
 };

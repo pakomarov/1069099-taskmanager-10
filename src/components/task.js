@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from '../const.js';
-import {formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils.js';
+import {formatTime, isDateExpired, joinMapped, removeSpaces} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
 const ClassCard = {
