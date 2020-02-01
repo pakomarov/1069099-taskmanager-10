@@ -19,7 +19,6 @@ const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 const tasks = generateTasks(TASK_COUNT);
-const isAllTasksArchived = tasks.every((task) => task.isArchive);
 const filters = getFilters(tasks);
 
 const renderTask = (containerElement, task) => {
@@ -55,15 +54,8 @@ const renderTask = (containerElement, task) => {
   render(containerElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderSiteComponents = () => {
-  render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
-
-  const fragment = document.createDocumentFragment();
-
-  render(fragment, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
-
-  const boardComponent = new BoardComponent();
-  render(fragment, boardComponent.getElement(), RenderPosition.BEFOREEND);
+const renderBoard = (boardComponent, tasks) => {
+  const isAllTasksArchived = tasks.every((task) => task.isArchive);
 
   if (isAllTasksArchived) {
     render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
@@ -97,6 +89,19 @@ const renderSiteComponents = () => {
       }
     });
   }
+};
+
+const renderSiteComponents = () => {
+  render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+
+  const fragment = document.createDocumentFragment();
+
+  render(fragment, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+
+  const boardComponent = new BoardComponent();
+  renderBoard(boardComponent, tasks);
+
+  render(fragment, boardComponent.getElement(), RenderPosition.BEFOREEND);
 
   siteMainElement.appendChild(fragment);
 };
